@@ -1,9 +1,7 @@
 import express from 'express';
+import api from './api/index'
 const router = express.Router();
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express with typescript' });
-});
+router.use('/api', api);
 
 export default router;
