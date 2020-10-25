@@ -4,9 +4,7 @@ import config from './ormconfig';
 
 const createDatabaseConnection = async () => {
   try {
-    const connection = await createConnection(config);
-    console.log(connection);
-    return connection;
+    return await createConnection(config);
   } catch (error) {
     console.log('Error while connecting to the database', error);
     return error;
