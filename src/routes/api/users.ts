@@ -19,7 +19,7 @@ router.get('/', asyncHandler(async function (req: express.Request, res: express.
 }));
 
 router.get('/:id', asyncHandler(async function (req: express.Request, res: express.Response, next: express.NextFunction) {
-  const user = await getRepository(User).findOne(req.params.id);
+  const user = await getRepository(User).findOne(req.params.id, { relations: ["educationList", "experiences", "languages"] });
   if (user) {
     res.send(user);
   } else {
