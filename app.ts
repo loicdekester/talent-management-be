@@ -23,7 +23,7 @@ app.use(function (req: express.Request, res: express.Response, next: express.Nex
 
 /** Error Handler */
 app.use(function (err: HttpException, req: express.Request, res: express.Response, next: express.NextFunction) {
-  res.status(err.status).send({ error: err.message });
+  res.status(err.status || 500).send({ error: err.message });
 });
 
 export default app;
