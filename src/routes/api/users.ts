@@ -7,11 +7,18 @@ import { auth, getIdFromToken } from '../../service/authService';
 const router = express.Router();
 
 router.post('/', asyncHandler(async function (req: express.Request, res: express.Response, next: express.NextFunction) {
-  const newUser: User = new User();
-  newUser.email = req.body.user.email;
-  await newUser.setEncryptedPassword(req.body.user.password);
-  const user = await getRepository(User).save(newUser);
-  res.send(user);
+  const previousUser = await getRepository(User).findOne({ email: req.body.user.email });
+  if (!previousUser) {
+    const newUser: User = new User();
+    newUser.email = req.body.user.email;
+    await newUser.setEncryptedPassword(req.body.user.password);
+    const user = await getRepository(User).save(newUser);
+    res.json({ "message": "User created successfully" });
+  } else {
+    res.status(401);
+    res.json({ "message": "Email already used" });
+  }
+
 }));
 
 /*router.get('/', asyncHandler(async function (req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -57,6 +64,11 @@ router.post('/signin', asyncHandler(async function (req: express.Request, res: e
   } else {
     res.status(404).send('User not found');
   }
+}));
+
+router.get('/logout', auth.required, asyncHandler(async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+  res.cookie('token', '', { expires: new Date(0) });
+  res.json({ 'message': 'Logout successful' });
 }));
 
 export default router;
