@@ -29,18 +29,18 @@ router.post('/', asyncHandler(async function (req: express.Request, res: express
 router.get('/', auth.required, asyncHandler(async function (req: express.Request, res: express.Response, next: express.NextFunction) {
   const user = await getRepository(User).findOne(getIdFromToken(req), { relations: ["educationList", "experiences", "languages"] });
   if (user) {
-    res.send(user);
+    res.json({ user });
   } else {
     res.status(404).send('User not found');
   }
 }));
 
-router.put('/:id', auth.required, asyncHandler(async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.put('/', auth.required, asyncHandler(async function (req: express.Request, res: express.Response, next: express.NextFunction) {
   const user = await getRepository(User).findOne(getIdFromToken(req));
   if (user) {
     getRepository(User).merge(user, req.body.user);
     const results = await getRepository(User).save(user);
-    return res.send(results);
+    return res.send({ "user": results });
   } else {
     res.status(404).send('User not found');
   }
@@ -64,6 +64,10 @@ router.post('/signin', asyncHandler(async function (req: express.Request, res: e
   } else {
     res.status(404).send('User not found');
   }
+}));
+
+router.get('/ping', auth.required, asyncHandler(async function (req, res, next) {
+  res.json({ 'message': 'User logged in' });
 }));
 
 router.get('/logout', auth.required, asyncHandler(async function (req: express.Request, res: express.Response, next: express.NextFunction) {
