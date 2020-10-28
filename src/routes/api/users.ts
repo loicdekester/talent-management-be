@@ -66,10 +66,6 @@ router.post('/signin', asyncHandler(async function (req: express.Request, res: e
   }
 }));
 
-router.get('/ping', auth.required, asyncHandler(async function (req, res, next) {
-  res.json({ 'message': 'User logged in' });
-}));
-
 router.get('/logout', auth.required, asyncHandler(async function (req: express.Request, res: express.Response, next: express.NextFunction) {
   res.cookie('token', '', { expires: new Date(0) });
   res.json({ 'message': 'Logout successful' });
